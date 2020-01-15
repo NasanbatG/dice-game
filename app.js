@@ -1,5 +1,5 @@
 //Тоглогчийн ээлжийг хадгалах хувьсагч 1-р тоглогч 0, 2-р тоглогч 1 гэж тэмдэглэе.
-var activePlayer = 1;
+var activePlayer = 0;
 //Тоглогчийн цуглуулсан оноог хадгалах хувьсагч
 var scores = [0, 0];
 //Тоглогчийн ээлжиндээ цуглуулж байгаа оноог хадгадах хувьсагч
@@ -29,11 +29,47 @@ var diceDom = document.querySelector(".dice");
 diceDom.style.display = "none";
 // document.querySelector(".dice").style.display = "none"; // js-ees css oorchloh
 
+//Шоог шидэх эвент листнер
 document.querySelector(".btn-roll").addEventListener("click", function() {
+  //1-6 доторх тоог санамсаргүй гаргах
   var diceNumber = Math.floor(Math.random() * 6) + 1;
 
+  // Шооний зургийг вэб дээрээ гаргаж ирнэ.
   diceDom.style.display = "block"; // js-ees css oorchloh
+  //Буусан шооны тоонд харгалзах зургийг вэб дээр гаргаж ирнэ.
   diceDom.src = "dice-" + diceNumber + ".png";
 
-  alert("Shoog shid: " + diceNumber);
+  //Буусан тоо нь 1-ээс ялгаатай бол тоголгчийн ээлжийн оноог нэмэгдүүлнэ.
+  if (diceNumber !== 1) {
+    //1-ees yalgaatai too buulaa. Buusan toog  toglogchid nemj ogno.
+    roundScore = roundScore + diceNumber;
+    document.getElementById("current-" + activePlayer).textContent = roundScore;
+
+    document.querySelector(".btn-hold").addEventListener("click", function() {
+      document.getElementById("score-" + activePlayer).textContent = roundScore;
+    });
+  } else {
+    //1 buusan tul toglogchiin eeljiig ene heseg solij ogno
+
+    // ene toglogchiin eeljin deer tsugluulsan onoog 0 bolgono
+    roundScore = 0;
+    document.getElementById("current-" + activePlayer).textContent = 0;
+    //toglogchiin eeljiig nogoo toglogchruu shilguulne
+    //herev idevhitei toglogchc ni 0 baival idevhite toglogchiig 1 bolgo
+    //herev idevhitei toglogchc ni 1 baival idevhite toglogchiig 0 bolgo
+    activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+    // if (activePlayer === 0) {
+    //   activePlayer = 1;
+    // } else {
+    //   activePlayer = 0;
+    // }
+
+    //ulaan tsegiig shiljuuleh
+    // document.querySelector(".player-0-panel").classList.remove("active");   //active ustgah
+    // document.querySelector(".player-1-panel").classList.add("active");  //active nemeh
+    document.querySelector(".player-0-panel").classList.toggle("active"); //active ustgah
+    document.querySelector(".player-1-panel").classList.toggle("active"); //active nemeh
+    //Shoog tur alga bolgono
+    diceDom.style.display = "none";
+  }
 });
