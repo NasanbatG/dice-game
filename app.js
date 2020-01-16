@@ -58,7 +58,7 @@ document.querySelector(".btn-hold").addEventListener("click", function() {
 
     document.getElementById("score-" + activePlayer).textContent =
       scores[activePlayer];
-    if (scores[activePlayer] >= 15) {
+    if (scores[activePlayer] >= 108) {
       isNewGame = false;
       document.getElementById("name-" + activePlayer).textContent = "Winner!!!";
       document
