@@ -1,45 +1,77 @@
-var activePlayer = 0;
-var scores = [0, 0];
-var roundScore = 0;
-
-document.getElementById("score-0").textContent = "0";
-document.getElementById("score-1").textContent = "0";
-document.getElementById("current-0").textContent = "0";
-document.getElementById("current-1").textContent = "0";
+var activePlayer;
+var scores;
+var roundScore;
+var isNewGame;
 
 var diceDom = document.querySelector(".dice");
-diceDom.style.display = "none";
+
+initGame();
+function initGame() {
+  activePlayer = 0;
+  scores = [0, 0];
+  roundScore = 0;
+  isNewGame = true;
+
+  document.getElementById("score-0").textContent = "0";
+  document.getElementById("score-1").textContent = "0";
+  document.getElementById("current-0").textContent = "0";
+  document.getElementById("current-1").textContent = "0";
+
+  document.getElementById("name-0").textContent = "Player 1";
+  document.getElementById("name-1").textContent = "Player 2";
+
+  document.querySelector(".player-0-panel").classList.remove("winner");
+  document.querySelector(".player-1-panel").classList.remove("winner");
+
+  document.querySelector(".player-0-panel").classList.remove("active");
+  document.querySelector(".player-1-panel").classList.remove("active");
+
+  document.querySelector(".player-0-panel").classList.add("active");
+
+  diceDom.style.display = "none";
+}
 
 document.querySelector(".btn-roll").addEventListener("click", function() {
-  var diceNumber = Math.floor(Math.random() * 6) + 1;
+  if (isNewGame) {
+    var diceNumber = Math.floor(Math.random() * 6) + 1;
 
-  diceDom.style.display = "block";
+    diceDom.style.display = "block";
 
-  diceDom.src = "dice-" + diceNumber + ".png";
+    diceDom.src = "dice-" + diceNumber + ".png";
 
-  if (diceNumber !== 1) {
-    roundScore = roundScore + diceNumber;
-    document.getElementById("current-" + activePlayer).textContent = roundScore;
+    if (diceNumber !== 1) {
+      roundScore = roundScore + diceNumber;
+      document.getElementById(
+        "current-" + activePlayer
+      ).textContent = roundScore;
+    } else {
+      switchToNextPlayer();
+    }
   } else {
-    switchToNextPlayer();
+    alert("Тоглоом дууссан байна. NEW GAME товчийг дарж эхлүүлнэ үү.");
   }
 });
 
 document.querySelector(".btn-hold").addEventListener("click", function() {
-  scores[activePlayer] = scores[activePlayer] + roundScore;
+  if (isNewGame) {
+    scores[activePlayer] = scores[activePlayer] + roundScore;
 
-  document.getElementById("score-" + activePlayer).textContent =
-    scores[activePlayer];
-  if (scores[activePlayer] >= 15) {
-    document.getElementById("name-" + activePlayer).textContent = "Winner!!!";
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.add("winner");
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.remove("active");
+    document.getElementById("score-" + activePlayer).textContent =
+      scores[activePlayer];
+    if (scores[activePlayer] >= 15) {
+      isNewGame = false;
+      document.getElementById("name-" + activePlayer).textContent = "Winner!!!";
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.add("winner");
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.remove("active");
+    } else {
+      switchToNextPlayer();
+    }
   } else {
-    switchToNextPlayer();
+    alert("Тоглоом дууссан байна. NEW GAME товчийг дарж эхлүүлнэ үү.");
   }
 });
 
@@ -54,3 +86,5 @@ function switchToNextPlayer() {
 
   diceDom.style.display = "none";
 }
+
+document.querySelector(".btn-new").addEventListener("click", initGame);
